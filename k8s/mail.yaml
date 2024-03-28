@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: mail
+  template:
+    metadata: 
+      labels:
+        component: mail
+    spec:
+      containers:
+        - name: mail-container
+          image: 315426346/task-manager-mail
+          ports:
+            - containerPort: 4001
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
+                  
+            - name: EMAIL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: email-token
+                  key: EMAIL_TOKEN
+
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
+            - name: PG_PORT
+              value: "5432"
+            - name: PGUSER
+              value: postgres
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: postgres-service          
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mail-service
+spec:
+  type: ClusterIP
+  selector:
+    component: mail
+  ports:
+    - port: 4001
+      targetPort: 4001

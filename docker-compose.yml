@@ -1,0 +1,44 @@
+version: "3"
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/usr/app
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+    ports:
+      - 4000:4000
+    volumes:
+      - ./auth:/usr/app
+
+  mail:
+    ports:
+      - 4001:4001
+    volumes:
+      - ./mail:/usr/app
+    build:
+      context: ./mail
+      dockerfile: Dockerfile.dev
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    ports:
+      - 4002:4002
+    volumes:
+      - ./api:/usr/app
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres_password

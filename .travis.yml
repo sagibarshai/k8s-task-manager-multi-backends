@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -f ./client/Dockerfile.dev -t 315426346/task-manager-client-dev:latest ./client
+
+script:
+  - docker run -e CI=true 315426346/task-manager-client-dev npm run test
+
+after_success:
+  - docker build -t 315426346/task-manager-client:latest -f ./client/Dockerfile.dev ./client
+  - docker build -t 315426346/task-manager-api:latest -f ./api/Dockerfile.dev ./api
+  - docker build -t 315426346/task-manager-mail:latest -f ./mail/Dockerfile.dev ./mail
+  - docker build -t 315426346/task-manager-auth:latest -f ./auth/Dockerfile.dev ./auth
+  - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_ID --password-stdin
+  - docker push 315426346/task-manager-client
+  - docker push 315426346/task-manager-api
+  - docker push 315426346/task-manager-mail
+  - docker push 315426346/task-manager-auth
+
