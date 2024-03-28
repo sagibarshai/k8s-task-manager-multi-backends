@@ -44,10 +44,6 @@ pgClient.on("connect", async (client) => {
   }
 });
 
-pgClient.on("error", (error) => {
-  console.log("error on db !! ", error);
-});
-
 const Port = 4000;
 const app = express();
 app.use(bodyParser.json());
@@ -63,7 +59,6 @@ app.post(
   body("email").isEmail().withMessage("Email is not valid"),
   body("password").isLength({ min: 6, max: 20 }).withMessage("Password must have 6 - 20 characters"),
   async (req: SignupRequest, res: Response) => {
-    console.log("req.originalUrl ", req.originalUrl);
     //   step 1: check if email is valid
     //   step 2: check on database if the email is not in use
     //   step 3: encrypt the password
