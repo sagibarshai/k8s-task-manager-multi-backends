@@ -3,6 +3,10 @@ dist: focal
 services:
   - docker
 
+env:
+  global:
+    - SHA=$(git rev-parse HEAD) 
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_c4b842cad075_key -iv $encrypted_c4b842cad075_iv -in service-accout.json.enc -out service-accout.json -d
 
@@ -19,19 +23,12 @@ before_install:
   - docker build -f ./client/Dockerfile.dev -t 315426346/task-manager-client-dev:latest ./client
 
 
-
 script:
   - docker run -e CI=true 315426346/task-manager-client-dev npm run test
 
-after_success:
-  - docker build -t 315426346/task-manager-client:latest ./client
-  - docker build -t 315426346/task-manager-api:latest -f ./api/Dockerfile.dev ./api
-  - docker build -t 315426346/task-manager-mail:latest -f ./mail/Dockerfile.dev ./mail
-  - docker build -t 315426346/task-manager-auth:latest -f ./auth/Dockerfile.dev ./auth
 
-  - docker push 315426346/task-manager-client
-  - docker push 315426346/task-manager-api
-  - docker push 315426346/task-manager-mail
-  - docker push 315426346/task-manager-auth
-
-
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: main
