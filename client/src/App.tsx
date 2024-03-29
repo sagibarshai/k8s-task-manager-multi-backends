@@ -1,3 +1,4 @@
+import DisplayTasks from "./pages/tasks/display";
 import styled from "styled-components";
 import "./App.css";
 import Signup from "./pages/auth/signup";
@@ -5,7 +6,6 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/auth/login";
 import { AxiosInterceptorNavigate } from "./axios";
 import { useEffect } from "react";
-import DisplayTasks from "./pages/tasks/display";
 
 const StyledAppWrapper = styled.div`
   width: 100vw;
