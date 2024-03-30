@@ -79,7 +79,7 @@ app.get("/", (_, res: Response) => {
 app.post("/welcome", currentUserMiddleWear, async (req: Request, res: Response) => {
   const user = req.user!;
 
-  const content = "Welcome to task manager app, We hope that you enjoy here !";
+  const content = "Welcome to task manager app, We hope that you will enjoy here !";
   const source = "business.scheduler.app@gmail.com";
   const subject = "Welcome to task manager app";
 

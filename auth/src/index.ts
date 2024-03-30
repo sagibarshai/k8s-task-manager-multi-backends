@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import jwt from "jsonwebtoken";
@@ -99,7 +99,7 @@ app.post(
         }
       );
 
-      return res.status(201).json({ token, user: { email } });
+      return res.status(201).json({ user: { email } });
     } catch (err) {
       console.log("Signup Route Error!! :", err);
       res.status(500).json({ message: "Something went wrong.." });
