@@ -11,10 +11,16 @@ The application consists of the following services:
 
 The application architecture comprises a Kubernetes cluster that consists of:
 
-Five deployments - Client (1 Replica, served through an nginx server), Authentication (2 Replicas), API (3 Replicas), Mail (2 Replicas), and Postgres (1 Replica).
-Five services - one NodePort for Client, three ClustersIP for Authentication, API, Mail, and one ClustersIP for Postgres.
+Five deployments - Client (1 Replica, served through an nginx server), 
+Authentication (2 Replicas), API (3 Replicas), Mail (2 Replicas), 
+and Postgresql (1 Replica).
+
+Five services - five ClustersIP for Authentication, API, Mail, Client, Postgresql.
+
 One Ingress - responsible for providing external accessibility to the application by acting as the gateway for incoming requests from users outside the Kubernetes cluster. The Ingress also routes to Client ClusterIP service, API ClusterIP, and Authentication ClusterIP.
-One PVC with ReadWriteMany for Postgresql for staying stateful DB even if the cluster, pod, or DB is crushed.
+
+One PVC with ReadWriteMany Postgresql for staying stateful DB even if the cluster, pod, or DB is crushed.
+
 CI/CD: the application uses Travis CI. The CI/CD process includes running tests,
 building Docker images, pushing them to Docker Hub, and deploying the cluster to GKE (Google Kubernetes Engine).
 
