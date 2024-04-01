@@ -49,7 +49,7 @@ if (!process.env.PGHOST) throw new Error("PGHOST env must be defined");
 
 pgClient.on("connect", (client) => {
   client.query(
-    `CREATE TABLE IF NOT EXISTS tasks ( user_id VARCHAR, id VARCHAR, timestamp TIMESTAMP, updated_at TIMESTAMP, title VARCHAR, content VARCHAR )`
+    `CREATE TABLE IF NOT EXISTS tasks (user_id VARCHAR, id VARCHAR, timestamp TIMESTAMP, updated_at TIMESTAMP, title VARCHAR, content VARCHAR )`
   );
 });
 
@@ -62,15 +62,6 @@ const currentUserMiddleWear = async (req: Request, res: Response, next: NextFunc
 
   try {
     user = jwt.verify(token, process.env.JWT_SECRET!) as User;
-    await pgClient.query(`
-    SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'users'
-    );
-`);
-    const storedUserToken = (await pgClient.query("SELECT token FROM users WHERE email=$1", [user.email]))?.rows[0]?.token;
-    if (storedUserToken !== token) return res.status(401).json({ message: "Something went wrong.." });
   } catch (err) {
     if (!user) return res.status(401).json({ message: "unAuthorized Request" });
     console.log("Error with currentUserMiddleWear ", err);

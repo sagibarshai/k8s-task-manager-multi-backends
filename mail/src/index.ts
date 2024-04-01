@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -22,7 +21,6 @@ declare global {
 
 const app = express();
 const Port = 4001;
-app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true }));
 
@@ -52,16 +50,6 @@ const currentUserMiddleWear = async (req: Request, res: Response, next: NextFunc
 
   try {
     user = jwt.verify(token, process.env.JWT_SECRET!) as User;
-    await pgClient.query(`
-    SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'users'
-    );
-`);
-
-    const storedUserToken = (await pgClient.query("SELECT token FROM users WHERE email=$1", [user.email]))?.rows[0]?.token;
-    if (storedUserToken !== token) return res.status(401).json({ message: "Something went wrong.." });
   } catch (err) {
     if (!user) return res.status(401).json({ message: "unAuthorized Request" });
     console.log("Error with currentUserMiddleWear ", err);

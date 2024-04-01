@@ -94,12 +94,14 @@ app.post(
         {
           withCredentials: true,
           headers: {
-            Cookie: "token=" + token,
+            Cookie: `token=${token}`,
           },
         }
       );
 
-      return res.status(201).json({ user: { email } });
+      const user: ResponseUser = { email, id };
+
+      return res.status(201).json({ user });
     } catch (err) {
       console.log("Signup Route Error!! :", err);
       res.status(500).json({ message: "Something went wrong.." });
@@ -133,6 +135,7 @@ app.post("/login", async (req: LoginRequest, res: Response) => {
     const { password: _, ...clientUser } = existingUser;
 
     res.cookie("token", token, { httpOnly: true, maxAge: 3600000, secure: false });
+
     res.status(200).json({ token, user: clientUser });
   } catch (err) {
     res.status(500).json({ message: "Something went wrong" });
